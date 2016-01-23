@@ -60,11 +60,7 @@ def duplicateDataLoader(filename):
             print("\tadding to %d processed items" % len(f1))
             for line in f1:
                 line = line.split("\t")
-                if line[2] in ["y", "n", "m"]:
-                    val = line[2]
-                else:
-                    val = int(line[2])
-                pairDic[line[0]+"\t"+line[1]] = val
+                pairDic[line[0]+"\t"+line[1]] = line[2]
                 
                 if line[2] == "y":
                     clusDicUpdate(clusDic, [line[0], line[1]])
@@ -136,7 +132,7 @@ def duplicateDataSaver(filename, pairDic, clusDic):
     lResults = []
     for k,v in pairDic.items():
         # for saving in file (loadable with duplicateDataLoader())
-        lResults.append(k+"\t"+str(v))
+        lResults.append(k+"\t"+v)
             
     with open(resultsFile, "w", encoding="utf8") as f9:
         f9.write("\n".join(lResults))
@@ -168,7 +164,7 @@ def routine1(filename, threshold, length, alg):
 
     with open(filename, "r", encoding="utf8") as f1:
         testList = f1.read().split("\n")
-        #random.shuffle(testList)
+        random.shuffle(testList)
 
         loop1 = 0
         loop2 = 0
@@ -191,45 +187,11 @@ def routine1(filename, threshold, length, alg):
                     if i1 != ii1:
                         testKey = "\t".join(sorted([i1, ii1]))
                         if testKey in pairDic:
-                            if pairDic[testKey] in ['y','n','m']:
+                            if pairDic[testKey] == "y":
                                 pass
-                            #elif pairDic[testKey] < int(threshold):
-                            #    pass
-                            elif pairDic[testKey] >= int(threshold):
-                                os.system('clear') # commands clears the screen
-                                reportRatio(i1, ii1)
-                                print("=====================")
-                                print(i)
-                                print("=====================")
-                                print(ii)
-                                print("=====================")
-                                choice = input("Type 'y', 'n', 'm', or 'stop': ")
-                                if choice in ['y','n','m']:
-                                    pairDic[testKey] = choice
-                                    if choice == 'y':
-                                        clusDicUpdate(clusDic, [i1, ii1])
-                                        clusDicSelfUpdate(clusDic)
-                                        updatePairDic(pairDic, clusDic)
-                                    # save results every 10 records
-                                    counter += 1
-                                    if counter % 10 == 0:
-                                        print("\nSAVING RESULTS...")
-                                        print("\t%d results processed...\n" % counter)
-                                        duplicateDataSaver(filename, pairDic, clusDic)
-                                elif choice == "stop":
-                                    break
-                                else:
-                                    input("Wrong choice: %s" % choice)
-                                    break
-                                print("\nMoving on...")
-                                #os.system('clear') # commands clears the screen
-                            else:
-                                pass
-                                
                         else:
-                            testThreshold = getRatio(i1, ii1, int(alg))
                             # other fuzz strategies can be used
-                            if testThreshold >= int(threshold):
+                            if getRatio(i1, ii1, int(alg)) > int(threshold):
                                 os.system('clear') # commands clears the screen
                                 reportRatio(i1, ii1)
                                 print("=====================")
@@ -257,16 +219,12 @@ def routine1(filename, threshold, length, alg):
                                     break
                                 print("\nMoving on...")
                                 #os.system('clear') # commands clears the screen
-                            elif testThreshold < int(threshold):
-                                pairDic[testKey] = testThreshold
-                            else:
-                                pass
+
                 else:
                     continue
                 break
                     
         duplicateDataSaver(filename, pairDic, clusDic)
-
 
 #==============================================================
 annotation = """
