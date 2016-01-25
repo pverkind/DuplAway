@@ -12,13 +12,12 @@ Routine to identify duplicates in fuzzy data (such as, for example, bibliographi
 
  - **file** : the name of a data file for processing (must be in the same folder as the script)
  - **thr**[eshold] : the lowest comparison ratio to consider
-#       alg[orithm] : chooses one of the 4 fuzzywuzzy routines
-#       len[gth]    : the length (in words) of the first comparison string;
-#                     works better when comparing longer strings with shorter ones
-#       sav[e Mode] : 'all', or 'man'
-#                     all - saves all: + works faster on restart; - creates really large result files (dupl)
-#                     a) if you don't mind extra space, restarting is much faster with 'all', since the script does have to calculate anew
-#                     b) re-running with 'man' will remove all irrelevant results, keeping only manually tagged ones ('y', 'n', and 'm')
+ - **alg**[orithm] : chooses one of the 4 fuzzywuzzy routines
+ - **len**[gth]    : the length (in words) of the first comparison string; works better when comparing longer strings with shorter ones
+ - **sav**[e Mode] : 'all', or 'man'
+   - all - saves all: + works faster on restart; - creates really large result files (dupl)
+     - a) if you don't mind extra space, restarting is much faster with 'all', since the script does have to calculate anew
+     - b) re-running with 'man' will remove all irrelevant results, keeping only manually tagged ones ('y', 'n', and 'm')
 #       id          : column with unique identifiers --- required column!
 #       comp[are]   : columns to use for comparison (separated by commas);
 #                     for example, [author] and [title] for bibliographical records
