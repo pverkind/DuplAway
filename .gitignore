@@ -1,7 +1,6 @@
 # Specific Files #
 ###################
-AraCorpus_AuthorNames.tsv
-AraCorpus_NewBiblio.tsv
+*.tsv
 /arc/* 
 
 # Packages #
