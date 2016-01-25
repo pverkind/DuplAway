@@ -2,7 +2,7 @@
 ~duplAway.py           # do not change
 ~file = AraCorpus_NewBiblio_TriCollection.csv # this is the file you will analyze
 ~sav  = all            # variants: all, man[ually tagged]
-~thr  = 99             # number between 1 and 100 (100 is usually a very close match [depends of the algorithm])
+~thr  = 101             # number between 1 and 100 (100 is usually a very close match [depends of the algorithm])
 ~alg  = 1              # one of the 4 fuzzywuzzy routines 
 ~len  = 5              # the shortest length of string (in words) to run comparison on
 ~id   = [1]            # the number of the column whenre the IDs are

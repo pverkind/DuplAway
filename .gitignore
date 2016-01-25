@@ -1,6 +1,6 @@
 # Specific Files #
 ###################
-*.tsv
+*.tmp
 /arc/* 
 
 # Packages #

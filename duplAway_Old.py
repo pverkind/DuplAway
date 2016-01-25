@@ -48,131 +48,95 @@ def getRatio(var1, var2, alg):
 
 #=R1 and R2======================================================
 # check if duplicatedata file exists; if does > loads it;
-# if doesn't > creates empty dictionaries
-def duplicateDataLoader(resultsFile):        
+# if doesn't > creates two empty dictionaries
+def duplicateDataLoader(resultsFile):
     if os.path.isfile(resultsFile):
         print("Some results already exist; incrementing...")
         pairDic = {}
         clusDic = {}
-        relaDic = {}
-        sameDic = {}
-
         with open(resultsFile, "r", encoding="utf8") as f1:
             f1 = f1.read().split("\n")
             print("\tadding to %s processed items" % "{:,}".format(len(f1)))
-            try:
-                with open(resultsFile.split(".")[0]+".tmp", "r", encoding="utf8") as f2:
-                    f2 = f2.read().split("\n")
-                    f1 += f2
-            except:
-                print("No temporary results to load...")
-                    
-            print("\tadding to %s processed items" % "{:,}".format(len(f1)))
             for line in f1:
                 line = line.split("\t")
-                if line[2] in choiceList:
+                if line[2] in ["y", "n", "m"]:
                     val = line[2]
                 else:
                     val = int(line[2])
-                pairDic["\t".join(sorted([line[0],line[1]]))] = val
+                pairDic[line[0]+"\t"+line[1]] = val
                 
-                if line[2]   == "y":
+                if line[2] == "y":
                     clusDicUpdate(clusDic, [line[0], line[1]])
-                elif line[2] == "r":
-                    clusDicUpdate(relaDic, [line[0], line[1]])
-                elif line[2] == "s":
-                    clusDicUpdate(sameDic, [line[0], line[1]])
-                else:
-                    pass
+        #input(clusDic)
         clusDicSelfUpdate(clusDic)
-        clusDicSelfUpdate(relaDic)
-        clusDicSelfUpdate(sameDic)
-        updatePairDic(pairDic, clusDic, "y")
-        updatePairDic(pairDic, relaDic, "r")
-        updatePairDic(pairDic, sameDic, "s")
+        updatePairDic(pairDic, clusDic)
+        # update pairDic from clusDic
     else:
         print("No results yet; creating new results variable...")
         pairDic = {}
         clusDic = {}
-        relaDic = {}
-        sameDic = {}
-        
-    return(pairDic, relaDic, sameDic, clusDic)
+    return(pairDic, clusDic)
 
 
-#=R2======================================================
+#=R1 and R2======================================================
 # list: remove duplicates and sort (for comparison)
 def fixList(l):
     return(sorted(list(set(l))))
 
-#=R2: clustedDic updating=================================
-def clusDicUpdate(setDic, listVal):
+#=R1 and R2: clustedDic updating=================================
+def clusDicUpdate(clusDic, listVal):
     for v in listVal:
-        if v in setDic:
-            setDic[v].extend(listVal)
-            setDic[v] = fixList(setDic[v])
+        if v in clusDic:
+            clusDic[v].extend(listVal)
+            clusDic[v] = fixList(clusDic[v])
 
-            for d in setDic[v]:
-                if d in setDic:
-                    setDic[d].extend(setDic[v])
-                    setDic[d] = fixList(setDic[d])
+            for d in clusDic[v]:
+                if d in clusDic:
+                    clusDic[d].extend(clusDic[v])
+                    clusDic[d] = fixList(clusDic[d])
                 else:
-                    setDic[d] = setDic[v]
+                    clusDic[d] = clusDic[v]
         else:
-            setDic[v] = listVal
+            clusDic[v] = listVal
 
-def clusDicSelfUpdate(setDic):
-    for k,v in setDic.items():
+def clusDicSelfUpdate(clusDic):
+    for k,v in clusDic.items():
         for d in v:
-            setDic[d].extend(v)
-            setDic[d] = fixList(setDic[d])
+            clusDic[d].extend(v)
+            clusDic[d] = fixList(clusDic[d])
 
-#=R2======================================================
+#=R1 and R2======================================================
 # if A=B and B=C, then A=C; the function does A=C
-def updatePairDic(pairDic, setDic, tag):
+def updatePairDic(pairDic, clusDic):
     print()
     print("==============================")
     print("PairDic Length: %s" % "{:,}".format(len(pairDic)))
-    for k,v in setDic.items():
+    for k,v in clusDic.items():
         pairs = list(itertools.combinations(v, 2))
         for p in pairs:
             key = "\t".join(sorted(list(p)))
             if key in pairDic:
                 pass
             else:
-                pairDic[key] = tag
+                pairDic[key] = "y"
     print("Updated PairDic Length: %s" % "{:,}".format(len(pairDic)))
     print("==============================")
 
-#=R2 - saving collected pairs============================
+#=R1 and R2 - saving collected pairs============================
 def saveCollectedPairs(pairDic, resultsFile, saveMode):
     print("Saving updated results into a file...")
     lResults = []
     if saveMode == "all":
-        # Temp / all results
-        lResults = []
         for k,v in pairDic.items():
+            # for saving in file (loadable with duplicateDataLoader())
             lResults.append(k+"\t"+str(v))
-        saveListResultsIntoFile(lResults, resultsFile.split(".")[0]+".tmp")
-
-        # Manual / only manually tagged
-        lResults = []
-        for k,v in pairDic.items():
-            if pairDic[k] in choiceList:
-                lResults.append(k+"\t"+str(v))
-        saveListResultsIntoFile(lResults, resultsFile.split(".")[0]+".tsv")
-
     elif saveMode == "man":
         for k,v in pairDic.items():
-            if pairDic[k] in choiceList:
+            if pairDic[k] in ["y", "n", "m"]:
                 lResults.append(k+"\t"+str(v))
-        saveListResultsIntoFile(lResults, resultsFile.split(".")[0]+".tsv")
-
     else:
         sys.exit("Wrong key for saving results (must be 'all' or 'man')")
 
-
-def saveListResultsIntoFile(lResults, resultsFile):
     duplRes = "\n".join(lResults)
     if duplRes != "":    
         with open(resultsFile, "w", encoding="utf8") as f9:
@@ -185,8 +149,8 @@ def saveListResultsIntoFile(lResults, resultsFile):
         print("No duplicate pairs; nothing saved...")
         print("================")
 
-#=R2 - saving clusters==================================
-def saveClusteredResults(clusDic, clusterFile, typ):
+#=R1 and R2 - saving clusters==================================
+def saveClusteredResults(clusDic, clusterFile):
     clusters = []
     for k,v in clusDic.items():
         val = v
@@ -195,26 +159,21 @@ def saveClusteredResults(clusDic, clusterFile, typ):
         clusters.append(val)
 
     clusters = fixList(clusters)
-    clusterFile = clusterFile.split(".")[0]+"_%s.txt" % typ
     with open(clusterFile, "w", encoding="utf8") as f9:
         f9.write("\n".join(clusters))
     print("================")
     print("%s clusters saved into %s" % ("{:,}".format(len(clusters)), clusterFile))
     print("================")
 
-choiceList = ["y", "n", "m", "r", "s"]
-
 def choiceCollector():
     print("=====================")
-    print("   y --- for `yes`, a true match, the same item")
-    print("   n --- for `no`, not a match, different items")
-    print("   m --- for `maybe` a match, requires manual checking")
-    print("   r --- for `related` text such as commentaries and/or continuations")
-    print("   s --- for `same` book that is split into multiple volumes")
+    print("   y --- for 'yes'   (true match)")
+    print("   n --- for 'no'    (no match)")
+    print("   m --- for 'maybe' (maybe a match; requires manual checking)")
     print("=====================")    
     print("stop --- to save the results and exit")
     print("=====================")
-    choice = input("Type one of the choices: ")
+    choice = input("Type 'y', 'n', 'm', or 'stop': ")
     return(choice)
 
 #==============================================================
@@ -252,7 +211,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
 
     # start processing data                   
     os.system('clear')    
-    pairDic, relaDic, sameDic, clusDic = duplicateDataLoader(resultsFile)
+    pairDic, clusDic = duplicateDataLoader(resultsFile)
     print("\tStarting processing...")
 
     def valGen(row, index, conn):
@@ -297,6 +256,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                     print("\nSAVING RESULTS...")
                     print("\t%s results processed...\n" % "{:,}".format(len(pairDic)))
                     saveCollectedPairs(pairDic, resultsFile, saveMode)
+                    saveClusteredResults(clusDic, clusterFile)
                 
             if len(i[0].split()) >= int(length): # to avoid comparing a shorter line against a longer one
                 for ii in testList:
@@ -309,38 +269,28 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                     if i[0] != ii[0]:
                         testKey = "\t".join(sorted([i[2], ii[2]])) # testKey = sorted([id1,id2])
                         if testKey in pairDic:
-                            if pairDic[testKey] in choiceList:
+                            if pairDic[testKey] in ['y','n','m']:
                                 pass
+                            #elif pairDic[testKey] < int(threshold):
+                            #    pass
                             elif pairDic[testKey] >= int(threshold):
                                 os.system('clear') # commands clears the screen
                                 routine2Report(loop1, loop2, testListLen, nump, i, ii)
                                 choice = choiceCollector()
                                 #choice = input("Type 'y', 'n', 'm', or 'stop': ")
-                                if choice in choiceList:
+                                if choice in ['y','n','m']:
                                     pairDic[testKey] = choice
                                     if choice == 'y':
                                         clusDicUpdate(clusDic, [i[2], ii[2]])
                                         clusDicSelfUpdate(clusDic)
-                                        updatePairDic(pairDic, clusDic, 'y')
-                                    elif choice == 'r':
-                                        clusDicUpdate(relaDic, [i[2], ii[2]])
-                                        clusDicSelfUpdate(relaDic)
-                                        updatePairDic(pairDic, relaDic, 'r')
-                                    elif choice == 's':
-                                        clusDicUpdate(sameDic, [i[2], ii[2]])
-                                        clusDicSelfUpdate(sameDic)
-                                        updatePairDic(pairDic, sameDic, 's')
-                                    else:
-                                        pass
-                                    # save results every 20 records
+                                        updatePairDic(pairDic, clusDic)
+                                    # save results every 10 records
                                     counter += 1
-                                    if counter % 20 == 0:
+                                    if counter % 10 == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
                                         saveCollectedPairs(pairDic, resultsFile, saveMode)
-                                        saveClusteredResults(clusDic, clusterFile, 'y')
-                                        saveClusteredResults(relaDic, clusterFile, 'r')
-                                        saveClusteredResults(sameDic, clusterFile, 's')
+                                        saveClusteredResults(clusDic, clusterFile)
                                 elif choice == "stop":
                                     break
                                 else:
@@ -358,31 +308,20 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                                 os.system('clear') # commands clears the screen
                                 routine2Report(loop1, loop2, testListLen, nump, i, ii)
                                 choice = choiceCollector()
-                                if choice in choiceList:
+                                #choice = input("Type 'y', 'n', 'm', or 'stop': ")
+                                if choice in ['y','n','m']:
                                     pairDic[testKey] = choice
                                     if choice == 'y':
                                         clusDicUpdate(clusDic, [i[2], ii[2]])
                                         clusDicSelfUpdate(clusDic)
-                                        updatePairDic(pairDic, clusDic, 'y')
-                                    elif choice == 'r':
-                                        clusDicUpdate(relaDic, [i[2], ii[2]])
-                                        clusDicSelfUpdate(relaDic)
-                                        updatePairDic(pairDic, relaDic, 'r')
-                                    elif choice == 's':
-                                        clusDicUpdate(sameDic, [i[2], ii[2]])
-                                        clusDicSelfUpdate(sameDic)
-                                        updatePairDic(pairDic, sameDic, 's')
-                                    else:
-                                        pass
-                                    # save results every 20 records
+                                        updatePairDic(pairDic, clusDic)
+                                    # save results every 10 records
                                     counter += 1
-                                    if counter % 20 == 0:
+                                    if counter % 10 == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
                                         saveCollectedPairs(pairDic, resultsFile, saveMode)
-                                        saveClusteredResults(clusDic, clusterFile, 'y')
-                                        saveClusteredResults(relaDic, clusterFile, 'r')
-                                        saveClusteredResults(sameDic, clusterFile, 's')
+                                        saveClusteredResults(clusDic, clusterFile)
                                 elif choice == "stop":
                                     break
                                 else:
@@ -400,9 +339,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
 
         # Saving results
         saveCollectedPairs(pairDic, resultsFile, saveMode)
-        saveClusteredResults(clusDic, clusterFile, 'y')
-        saveClusteredResults(relaDic, clusterFile, 'r')
-        saveClusteredResults(sameDic, clusterFile, 's')
+        saveClusteredResults(clusDic, clusterFile)
 
 #==============================================================
 annotation = """
