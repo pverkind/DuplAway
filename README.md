@@ -17,24 +17,18 @@ Routine to identify duplicates in fuzzy data (such as, for example, bibliographi
  - **sav**[e Mode] : 'all', or 'man'
    - all - saves all: + works faster on restart; - creates really large result files (dupl)
      - a) if you don't mind extra space, restarting is much faster with 'all', since the script does have to calculate anew
-     - b) re-running with 'man' will remove all irrelevant results, keeping only manually tagged ones ('y', 'n', and 'm')
-#       id          : column with unique identifiers --- required column!
-#       comp[are]   : columns to use for comparison (separated by commas);
-#                     for example, [author] and [title] for bibliographical records
-#       disp[lay]   : columns to use for showing during the decision stage (separated by commas);
-#                     for example, [author], [title], [editor], etc. for bibliographical records
-#       verb[al]    : just a word for the category of things that are compared > makes it easier to interpret what is in the file
-#                     for example, the same dataset can be used for different purposes, and while it will be reflected in the
-#                     suffix, where the the colund numbers are given, this suffix is not very readable, so adding a simple verbal
-#                     marker should be helpful (so, verb=Authors > analyzing Authors' names; verb=Book --- book titles, etc.
-# NB: arguments (i.e., everything after 'python3 duplAway.py') can be given in any order;
-#     do not change the name of the script, since it will break the argument analysis logic
-#
-#==========================================================
-## example command for Routine 2
-#==========================================================
+     - b) re-running with 'man' will remove all irrelevant results, keeping only manually tagged ones ('y', 'n', 'm', and other supported choices)
+ - **id** : column with unique identifiers --- required column!
+ - **comp**[are] : columns to use for comparison (separated by commas); for example, [author] and [title] for identifying bibliographical records for the same works
+ - **disp**[lay] : columns to use for showing during the decision stage (separated by commas); for example, [author], [title], [editor], etc. for bibliographical records
+ - **verb**[al]: a word that will be added as an infix into a file with results; makes it easier to understand what kind of data the file contains; for example, the same dataset can be used for different purposes, and while it will be reflected in the infix, where the the column numbers are given, it is not very readable. Adding a simple verbal marker should be helpful (so, verb=Authors > analyzing Authors' names; verb=Book --- book titles, etc.)
 
+*NB*: arguments (i.e., everything after 'python3 duplAway.py') can be given in any order; do not change the name of the script, since it will break the argument analysis logic
+
+## example command for Routine 2
+```
 $ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 len=5 id=[4] comp=[4] disp=[4,6] verb=Authors sav=all
+```
     - the script will analyze file 'AraCorpus_NewBiblio_TriCollection.tsv',
     - using algorithm 4 and showing only results with 90% likelihood
     - comparing longer strings with shorter ones seems to work better,
