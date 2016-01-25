@@ -29,23 +29,30 @@ Routine to identify duplicates in fuzzy data (such as, for example, bibliographi
 ```
 $ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 len=5 id=[4] comp=[4] disp=[4,6] verb=Authors sav=all
 ```
-    - the script will analyze file 'AraCorpus_NewBiblio_TriCollection.tsv',
-    - using algorithm 4 and showing only results with 90% likelihood
-    - comparing longer strings with shorter ones seems to work better,
-      hence the lower limit is set to 5 [words]; you may want to
-      experiment with this parameter (increase it, if you get stuck);
-    - it will use column 4 for ids
-    - it will also use values from col 4 for comparison;
-    - it will show also data from cols 4 and 6, which should help to
-      make the finals decision whether this is a true of false match
-    - it will add 'Authors' to the name of the file (for readability)
-      this essentially means that we are comparing names of authors
-    - it will also save ALL results on exit
-$ python3 duplAway.py file=AraCorpus_AuthorNames.tsv thr=90 alg=4 len=5 id=[1] comp=[2] disp=[2,3,4] verb=Authors sav=all
-$ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 len=5 id=[1] comp=[4,8] disp=[1,3,4,6,8,13] verb=Books sav=all
 
-# Config file is a more convenient option: keep all parameters in a file and load it with a script > shorter command
-# Example for Routine 1 (include the following 11 lines into a file > configFile2.txt); everything after '#' is a comment
+- the script will analyze file 'AraCorpus_NewBiblio_TriCollection.tsv',
+- using algorithm 4 and showing only results with 90% likelihood
+- comparing longer strings with shorter ones seems to work better, hence the lower limit is set to 5 [words]; you may want to experiment with this parameter (increase it, if you get stuck);
+- it will use column 4 for ids
+- it will also use values from col 4 for comparison;
+- it will show also data from cols 4 and 6, which should help to make the finals decision whether this is a true of false match
+- it will add 'Authors' to the name of the file (for readability) this essentially means that we are comparing names of authors
+- it will also save ALL results on exit
+
+```
+$ python3 duplAway.py file=AraCorpus_AuthorNames.tsv thr=90 alg=4 len=5 id=[1] comp=[2] disp=[2,3,4] verb=Authors sav=all
+```
+
+```
+$ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 len=5 id=[1] comp=[4,8] disp=[1,3,4,6,8,13] verb=Books sav=all
+```
+
+# Config file
+Using a config file is a more convenient option: all parameters are stored in a file > shorter command
+
+Example for Routine 2 (include the following 11 lines into a file > configFile2.txt); everything after '#' is a comment
+
+```
 ============================
 ~duplAway.py           # do not change
 ~file = AraCorpus_NewBiblio_TriCollection.tsv # this is the file you will analyze
@@ -58,23 +65,21 @@ $ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 le
 ~disp = [1,3,4,6,8,13] # the numbers of columns strings from which should be printed on the screen (divided by commas)
 ~verb = Books          # this is the infix that will be added to the name of the file with results  
 ============================
-# The command to run the script then becomes:
+```
 
+The command to run the script then becomes:
+
+```
 $ python3 duplAway.py configFile2.txt
+```
 
-#==========================================================
 # Some suggestions
-#==========================================================
-# 1. fuzzywuzzy Library has 4 algorithms that have different level of tolerance, so it make sense to start with
-#    algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear;
-#    after that, repeating this for algorithms 2, 3, and 4.
-    [1] fuzz.ratio
-    [2] fuzz.partial_ratio
-    [3] fuzz.token_sort_ratio
-    [4] fuzz.token_set_ratio
-#    Details on these algorithms: http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
-# 2. Using sav=all will save large files, but will make it faster to restart if you need to; when you think that
-#    you are done, rerun the script with sav=man, which will remove all irrelevant results, saving only 'man'ual decisions
-# 3. The len=XX parameter: the comparison of longer lines with shorter gives better results in the workflow, so you may want to up
+ 1. fuzzywuzzy Library has 4 algorithms that have different level of tolerance, so it make sense to start with algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear; after that, repeating this for algorithms 2, 3, and 4. (Detailed descriptions of these algorithms.)[http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/]
+   - [1] `fuzz.ratio`
+   - [2] `fuzz.partial_ratio`
+   - [3] `fuzz.token_sort_ratio`
+   - [4] `fuzz.token_set_ratio`  
+ 2. Using `sav=all` is likely to result in large files, but this will make it faster to restart if you need to; when you think that you are done, you can rerun the script with `sav=man`, which will remove all irrelevant results, saving only `man`ual decisions
+ 3. The len=XX parameter: the comparison of longer lines with shorter gives better results in the workflow, so you may want to up
 #    this parameterif the script gets stuck on an inconclusive string.
 
