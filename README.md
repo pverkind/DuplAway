@@ -2,13 +2,12 @@
 Routine to identify duplicates in fuzzy data (such as, for example, bibliographical records)
 
 # Running the script:
-   - works of Python 3
+   - works on Python 3 (will not run on Windows command line if your data is in Unicode; will work via IDLE, but some minor modification to the script are necessary)
    - [fuzzywuzzy library](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/) must be installed
 
-# Routine 2:
- - uses TSV with any number of columns; works best for comparing
-   complex items (bibliographical records)
-## Parameters are as follows:
+# Routine 2 uses TSV with any number of columns
+
+Parameters are as follows:
 
  - **file** : the name of a data file for processing (must be in the same folder as the script)
  - **thr**[eshold] : the lowest comparison ratio to consider
@@ -19,23 +18,23 @@ Routine to identify duplicates in fuzzy data (such as, for example, bibliographi
   - [4] `fuzz.token_set_ratio`
   - [Detailed descriptions of these algorithms.](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/)
  - **len**[gth]    : the length (in words) of the first comparison string; works better when comparing longer strings with shorter ones
- - **sav**[e Mode] : 'all', or 'man'
-   - all - saves all: + works faster on restart; - creates really large result files (dupl)
-     - a) if you don't mind extra space, restarting is much faster with 'all', since the script does have to calculate anew
-     - b) re-running with 'man' will remove all irrelevant results, keeping only manually tagged ones ('y', 'n', 'm', and other supported choices)
+ - **sav**[e Mode] : `all`, or `man`
+   - `all` - saves all results; advantage: works faster on restart; disadvantage: creates really large result files (duplicID)
+     - a) if you don't mind extra space, restarting is much faster with `all`, since the script does have to calculate anew
+     - b) re-running with `man` will remove all irrelevant results, keeping only manually tagged ones (`y`, `n`, `m`, and other supported choices)
  - **id** : column with unique identifiers --- required column!
  - **comp**[are] : columns to use for comparison (separated by commas); for example, [author] and [title] for identifying bibliographical records for the same works
  - **disp**[lay] : columns to use for showing during the decision stage (separated by commas); for example, [author], [title], [editor], etc. for bibliographical records
- - **verb**[al]: a word that will be added as an infix into a file with results; makes it easier to understand what kind of data the file contains; for example, the same dataset can be used for different purposes, and while it will be reflected in the infix, where the the column numbers are given, it is not very readable. Adding a simple verbal marker should be helpful (so, verb=Authors > analyzing Authors' names; verb=Book --- book titles, etc.)
+ - **verb**[al]: a word that will be added as an infix into a file with results; makes it easier to understand what kind of data the file contains; for example, the same dataset can be used for different purposes, and while it will be reflected in the infix, where the the column numbers are given, it is not very readable. Adding a simple verbal marker should be helpful (so, `verb=Authors` > analyzing Authors' names; `verb=Book` --- book titles, etc.)
 
-*NB*: arguments (i.e., everything after 'python3 duplAway.py') can be given in any order; do not change the name of the script, since it will break the argument analysis logic
+*NB*: arguments (i.e., everything after `python3 duplAway.py`) can be given in any order; do not change the name of the script, since it will break the argument analysis logic
 
 ## example command for Routine 2
 ```
 $ python3 duplAway.py file=AraCorpus_NewBiblio_TriCollection.tsv thr=90 alg=4 len=5 id=[4] comp=[4] disp=[4,6] verb=Authors sav=all
 ```
 
-- the script will analyze file 'AraCorpus_NewBiblio_TriCollection.tsv',
+- the script will analyze file `AraCorpus_NewBiblio_TriCollection.tsv`,
 - using algorithm 4 and showing only results with 90% likelihood
 - comparing longer strings with shorter ones seems to work better, hence the lower limit is set to 5 [words]; you may want to experiment with this parameter (increase it, if you get stuck);
 - it will use column 4 for ids
@@ -79,7 +78,7 @@ $ python3 duplAway.py configFile2.txt
 ```
 
 # Some thoughts and suggestions
- 1. fuzzywuzzy Library has 4 algorithms that have different level of tolerance, so it make sense to start with algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear; after that, repeating this for algorithms 2, 3, and 4.
+ 1. `fuzzywuzzy` Library has 4 algorithms that have different level of tolerance, so it make sense to start with algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear; after that, repeating this for algorithms 2, 3, and 4.
    - [1] `fuzz.ratio`
    - [2] `fuzz.partial_ratio`
    - [3] `fuzz.token_sort_ratio`
