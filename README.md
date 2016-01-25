@@ -1,10 +1,9 @@
 # DuplAway
-Routine to identify duplicates in fuzzy data, like bibliographical
-records
+Routine to identify duplicates in fuzzy data (such as, for example, bibliographical records)
 
 # Running the script:
    - works of Python 3
-   - (fuzzywuzzy library)[http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/] must be installed
+   - [fuzzywuzzy library](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/) must be installed
 
 # Routine 2:
  - uses TSV with any number of columns; works best for comparing
