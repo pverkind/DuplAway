@@ -13,6 +13,11 @@ Routine to identify duplicates in fuzzy data (such as, for example, bibliographi
  - **file** : the name of a data file for processing (must be in the same folder as the script)
  - **thr**[eshold] : the lowest comparison ratio to consider
  - **alg**[orithm] : chooses one of the 4 fuzzywuzzy routines
+  - [1] `fuzz.ratio`
+  - [2] `fuzz.partial_ratio`
+  - [3] `fuzz.token_sort_ratio`
+  - [4] `fuzz.token_set_ratio`
+  - [Detailed descriptions of these algorithms.](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/)
  - **len**[gth]    : the length (in words) of the first comparison string; works better when comparing longer strings with shorter ones
  - **sav**[e Mode] : 'all', or 'man'
    - all - saves all: + works faster on restart; - creates really large result files (dupl)
@@ -73,13 +78,13 @@ The command to run the script then becomes:
 $ python3 duplAway.py configFile2.txt
 ```
 
-# Some suggestions
- 1. fuzzywuzzy Library has 4 algorithms that have different level of tolerance, so it make sense to start with algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear; after that, repeating this for algorithms 2, 3, and 4. (Detailed descriptions of these algorithms.)[http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/]
+# Some thoughts and suggestions
+ 1. fuzzywuzzy Library has 4 algorithms that have different level of tolerance, so it make sense to start with algorithm 1 and threshold 100, gradually lowering until too many wrong suggestions start to appear; after that, repeating this for algorithms 2, 3, and 4.
    - [1] `fuzz.ratio`
    - [2] `fuzz.partial_ratio`
    - [3] `fuzz.token_sort_ratio`
-   - [4] `fuzz.token_set_ratio`  
+   - [4] `fuzz.token_set_ratio`
+   - [Detailed descriptions of these algorithms.](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/)
  2. Using `sav=all` is likely to result in large files, but this will make it faster to restart if you need to; when you think that you are done, you can rerun the script with `sav=man`, which will remove all irrelevant results, saving only `man`ual decisions
- 3. The len=XX parameter: the comparison of longer lines with shorter gives better results in the workflow, so you may want to up
-#    this parameterif the script gets stuck on an inconclusive string.
+ 3. The `len=XX` parameter (number of words): the comparison of longer strings with shorter ones gives better results in the workflow, so you may want to up this parameter if the script gets stuck on an inconclusive string.
 
