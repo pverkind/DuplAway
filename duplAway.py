@@ -292,7 +292,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
              
             loop1 += 1
             if loop1 % 100 == 0:
-                print("% 9s" % "{:,}".format(loop1))
+                print("% 9s %s processed..." % ("{:,}".format(loop1), verb))
                 if len(pairDic) < loop2 and saveMode == "all":
                     print("\nSAVING RESULTS...")
                     print("\t%s results processed...\n" % "{:,}".format(len(pairDic)))
