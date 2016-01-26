@@ -291,7 +291,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
             i = i.split("\t")
              
             loop1 += 1
-            if loop1 % 100 == 0:
+            if loop1 % 200 == 0:
                 print("% 9s %s processed..." % ("{:,}".format(loop1), verb))
                 if len(pairDic) < loop2 and saveMode == "all":
                     print("\nSAVING RESULTS...")
@@ -569,3 +569,5 @@ def main():
         print(annotation)
 
 main()
+
+# 1. save only results 

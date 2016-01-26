@@ -86,4 +86,5 @@ $ python3 duplAway.py configFile2.txt
    - [Detailed descriptions of these algorithms.](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/)
  2. Using `sav=all` is likely to result in large files, but this will make it faster to restart if you need to; when you think that you are done, you can rerun the script with `sav=man`, which will remove all irrelevant results, saving only `man`ual decisions
  3. The `len=XX` parameter (number of words): the comparison of longer strings with shorter ones gives better results in the workflow, so you may want to up this parameter if the script gets stuck on an inconclusive string.
+ 4. If there is an option to run the script remotely, it makes sense (1) to generate statistics for all pairs (large files!) and then (2) review the results; to generate stats, set `sav=all` (to save all results) and `thr=101` (or anything higher than 100), which will make the script to run until it is done. Then, lower the threshold and run the script again---it will not be re-calculating anything, just running through the list and showing pairs above the threshold. This will work faster, theoretically...
 
