@@ -237,7 +237,7 @@ def routine2Report(loop1, loop2, testListLen, nump, i, ii):
 
 # REQUIRES: ID column, COMPARE columns, DISPLAY columns
 # file=filename thr=90 alg=4 len=4 id=[1] comp=[1,2,3,4] disp=[1,2,3,4,5,6] verb=CompCategory
-def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):        
+def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
     # generating info on columns and the suffix
     id1   = int(ID[1:-1])
     comp1 = sorted(list(map(int, comp[1:-1].split(","))))
@@ -254,6 +254,8 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
     os.system('clear')    
     pairDic, relaDic, sameDic, clusDic = duplicateDataLoader(resultsFile)
     print("\tStarting processing...")
+
+    saveCounter = 50
 
     def valGen(row, index, conn):
         row = row.split("\t")
@@ -332,9 +334,9 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                                         updatePairDic(pairDic, sameDic, 's')
                                     else:
                                         pass
-                                    # save results every 20 records
+                                    # save results every saveCounter records
                                     counter += 1
-                                    if counter % 20 == 0:
+                                    if counter % saveCounter == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
                                         saveCollectedPairs(pairDic, resultsFile, saveMode)
@@ -374,9 +376,9 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                                         updatePairDic(pairDic, sameDic, 's')
                                     else:
                                         pass
-                                    # save results every 20 records
+                                    # save results every saveCounter records
                                     counter += 1
-                                    if counter % 20 == 0:
+                                    if counter % saveCounter == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
                                         saveCollectedPairs(pairDic, resultsFile, saveMode)
