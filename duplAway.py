@@ -8,6 +8,12 @@ from fuzzywuzzy import process
 
 interSave = 1000
 
+# ToDo
+# 1. Add algorithm # into the tmp file
+# 2. load tmp with the algorithm #
+# 3. Advantage: running several instances of the script generating analyses with different algorithms.
+# 4. During the review process results of the relevant algorithms will be loaded
+
 #=R1 and R2===================================================
 # string comparison routines using fuzzywuzzy
 # http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
@@ -51,7 +57,7 @@ def getRatio(var1, var2, alg):
 #=R1 and R2======================================================
 # check if duplicatedata file exists; if does > loads it;
 # if doesn't > creates empty dictionaries
-def duplicateDataLoader(resultsFile):        
+def duplicateDataLoader(resultsFile, alg):        
     if os.path.isfile(resultsFile):
         print("Some results already exist; incrementing...")
         pairDic = {}
@@ -63,13 +69,13 @@ def duplicateDataLoader(resultsFile):
             f1 = f1.read().split("\n")
             print("\tadding to %s processed items" % "{:,}".format(len(f1)))
             try:
-                with open(resultsFile.split(".")[0]+".tmp", "r", encoding="utf8") as f2:
+                with open(resultsFile.split(".")[0]+"_%s.tmp" % alg, "r", encoding="utf8") as f2:
                     f2 = f2.read().split("\n")
                     f1 += f2
+                print("\tadding to %s processed items" % "{:,}".format(len(f1)))
             except:
                 print("No temporary results to load...")
                     
-            print("\tadding to %s processed items" % "{:,}".format(len(f1)))
             for line in f1:
                 line = line.split("\t")
                 if line[2] in choiceList:
@@ -147,7 +153,7 @@ def updatePairDic(pairDic, setDic, tag):
     print("==============================")
 
 #=R2 - saving collected pairs============================
-def saveCollectedPairs(pairDic, resultsFile, saveMode):
+def saveCollectedPairs(pairDic, resultsFile, saveMode, alg):
     print("Saving updated results into a file...")
     lResults = []
     if saveMode == "all":
@@ -155,7 +161,7 @@ def saveCollectedPairs(pairDic, resultsFile, saveMode):
         lResults = []
         for k,v in pairDic.items():
             lResults.append(k+"\t"+str(v))
-        saveListResultsIntoFile(lResults, resultsFile.split(".")[0]+".tmp")
+        saveListResultsIntoFile(lResults, resultsFile.split(".")[0]+"_%s.tmp" % alg)
 
         # Manual / only manually tagged
         lResults = []
@@ -254,7 +260,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
 
     # start processing data                   
     os.system('clear')    
-    pairDic, relaDic, sameDic, clusDic = duplicateDataLoader(resultsFile)
+    pairDic, relaDic, sameDic, clusDic = duplicateDataLoader(resultsFile, alg)
     print("\tStarting processing...")
 
     saveCounter = 50
@@ -301,7 +307,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                 if len(pairDic) < loop2 and saveMode == "all":
                     print("\nSAVING RESULTS...")
                     print("\t%s results processed...\n" % "{:,}".format(len(pairDic)))
-                    saveCollectedPairs(pairDic, resultsFile, saveMode)
+                    saveCollectedPairs(pairDic, resultsFile, saveMode, alg)
                 
             if len(i[0].split()) >= int(length): # to avoid comparing a shorter line against a longer one
                 for ii in testList:
@@ -342,7 +348,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                                     if counter % saveCounter == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
-                                        saveCollectedPairs(pairDic, resultsFile, saveMode)
+                                        saveCollectedPairs(pairDic, resultsFile, saveMode, alg)
                                         saveClusteredResults(clusDic, clusterFile, 'y')
                                         saveClusteredResults(relaDic, clusterFile, 'r')
                                         saveClusteredResults(sameDic, clusterFile, 's')
@@ -384,7 +390,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                                     if counter % saveCounter == 0:
                                         print("\nSAVING RESULTS...")
                                         print("\t%d results processed...\n" % counter)
-                                        saveCollectedPairs(pairDic, resultsFile, saveMode)
+                                        saveCollectedPairs(pairDic, resultsFile, saveMode, alg)
                                         saveClusteredResults(clusDic, clusterFile, 'y')
                                         saveClusteredResults(relaDic, clusterFile, 'r')
                                         saveClusteredResults(sameDic, clusterFile, 's')
@@ -404,7 +410,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
                 break
 
         # Saving results
-        saveCollectedPairs(pairDic, resultsFile, saveMode)
+        saveCollectedPairs(pairDic, resultsFile, saveMode, alg)
         saveClusteredResults(clusDic, clusterFile, 'y')
         saveClusteredResults(relaDic, clusterFile, 'r')
         saveClusteredResults(sameDic, clusterFile, 's')
