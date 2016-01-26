@@ -6,6 +6,8 @@ import difflib, fuzzywuzzy
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
+interSave = 1000
+
 #=R1 and R2===================================================
 # string comparison routines using fuzzywuzzy
 # http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/
@@ -295,6 +297,7 @@ def routine2(filename, threshold, length, alg, ID, comp, disp, verb, saveMode):
             loop1 += 1
             if loop1 % 200 == 0:
                 print("% 9s %s processed..." % ("{:,}".format(loop1), verb))
+            if loop1 % interSave == 0:
                 if len(pairDic) < loop2 and saveMode == "all":
                     print("\nSAVING RESULTS...")
                     print("\t%s results processed...\n" % "{:,}".format(len(pairDic)))

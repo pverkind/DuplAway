@@ -7,6 +7,6 @@
 ~len  = 5              # the shortest length of string (in words) to run comparison on
 ~id   = [4]            # the number of the column whenre the IDs are
 ~comp = [4]            # the numbers of columns strings from which should be compared (divided by commas)
-~disp = [4,6]          # the numbers of columns strings from which should be printed on the screen (divided by commas)
+~disp = [4,6]          # the numbers of columns strings from which should be shown (divided by commas)
 ~verb = Authors        # this is the infix that will be added to the name of the file with results  
 ============================
