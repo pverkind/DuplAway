@@ -10,10 +10,30 @@ interSave = 1000
 saveCounter = 25
 
 # ToDo
-# 1. Add algorithm # into the tmp file
-# 2. load tmp with the algorithm #
-# 3. Advantage: running several instances of the script generating analyses with different algorithms.
-# 4. During the review process results of the relevant algorithms will be loaded
+# 1. calculate all four parameters
+# 2. save tmp
+# 2. save the list of numbers
+# 2. config file: chooses which parameters to consider (doing two at once)
+# 3. Results merger
+
+# CONFIGURATION
+
+#============================
+fName = "AraCorpus_NewBiblio_TriCollection_Historical.csv" # this is the file you will analyze
+sav   = "all"            # variants: all, man[ually tagged]
+thr   = "100"             # number between 1 and 100 (100 is usually a very close match [depends of the algorithm])
+alg   = "4"              # one of the 4 fuzzywuzzy routines
+alg1  = "50"
+alg2  = "0"
+alg3  = "0"
+alg4  = "90"
+LEN   = "5"              # the shortest length of string (in words) to run comparison on
+ID    = "[1]"            # the number of the column whenre the IDs are
+comp  = "[3,8]"          # the numbers of columns strings from which should be compared (divided by commas)
+disp  = "[1,3,4,6,8,13]" # the numbers of columns strings from which should be printed on the screen (divided by commas)
+verb  = "BooksTitlesHist"          # this is the infix that will be added to the name of the file with results  
+#============================
+
 
 #=R1 and R2===================================================
 # string comparison routines using fuzzywuzzy
@@ -37,22 +57,57 @@ def reportRatio(var1, var2):
     print("=====================")
     #print("mean: %d" % mean)
 
+def getAllRatio(var1, var2):
+    ratio = fuzz.ratio(var1,var2)
+    partial_ratio = fuzz.partial_ratio(var1,var2)
+    token_sort_ratio = fuzz.token_sort_ratio(var1,var2)
+    token_set_ratio = fuzz.token_set_ratio(var1,var2)
+    return(ratio, partial_ratio, token_sort_ratio, token_set_ratio)
+
+##def getRatioOld(var1, var2, alg):
+##    if int(alg) in [1,2,3,4]:
+##        if int(alg) == 1:
+##            ratio = fuzz.ratio(var1,var2)
+##        if int(alg) == 2:
+##            ratio = fuzz.partial_ratio(var1,var2)
+##        if int(alg) == 3:
+##            ratio = fuzz.token_sort_ratio(var1,var2)
+##        if int(alg) == 4:
+##            ratio = fuzz.token_set_ratio(var1,var2)
+##    else:
+##        reportRatio(var1,var2)
+##        print("=====================")
+##        print("Choose 1, 2, 3, or 4 to to use a specific comparison algorithm...")
+##        print("For more details on differences, check:\n\thttp://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/")
+##        sys.exit()
+##    return(ratio)
+
+# Testing correlational approach
 def getRatio(var1, var2, alg):
-    if int(alg) in [1,2,3,4]:
-        if int(alg) == 1:
-            ratio = fuzz.ratio(var1,var2)
-        if int(alg) == 2:
-            ratio = fuzz.partial_ratio(var1,var2)
-        if int(alg) == 3:
-            ratio = fuzz.token_sort_ratio(var1,var2)
-        if int(alg) == 4:
-            ratio = fuzz.token_set_ratio(var1,var2)
+
+    r1test = 40
+    r2test = 100
+    r3test = 100
+    r4test = 90 # 85 is probably too low --- too many FP
+    
+    # let's keep alg as a dummy, but it may be unimportant
+    # it seems that the quality of results can be improved if two (or)
+    # -- more results are correlated: [1] can be lowered as long as [4] remains high
+    
+    r1 = fuzz.ratio(var1,var2)
+    r2 = fuzz.partial_ratio(var1,var2)
+    r3 = fuzz.token_sort_ratio(var1,var2)
+    r4 = fuzz.token_set_ratio(var1,var2)
+
+    if r1 >= r1test:
+        if r4 >= r4test:
+            ratio = 100
+            #reportRatio(var1, var2)
+        else:
+            ratio = 0
     else:
-        reportRatio(var1,var2)
-        print("=====================")
-        print("Choose 1, 2, 3, or 4 to to use a specific comparison algorithm...")
-        print("For more details on differences, check:\n\thttp://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/")
-        sys.exit()
+        ratio = 0
+
     return(ratio)
 
 #=R1 and R2======================================================

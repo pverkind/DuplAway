@@ -578,6 +578,40 @@ def main():
         print(sorted(sys.argv))
         print(annotation)
 
-main()
+#main()
 
+routine2("AraCorpus_NewBiblio_TriCollection_Historical.csv",\
+         # filename
+         "50",\
+         # threshold
+         "5",\
+         # length
+         "1",\
+         # alg
+         "[1]",\
+         # ID
+         "[4,8]",\
+         # comp
+         "[1,3,4,6,8,13]",\
+         # disp
+         "BooksTitles",\
+         # verb
+         "all"\
+         # saveMode
+         )
+
+"""
+============================
+~duplAway.py           # do not change
+~file = AraCorpus_NewBiblio_TriCollection_Historical.csv # this is the file you will analyze
+~sav  = all            # variants: all, man[ually tagged]
+~thr  = 100             # number between 1 and 100 (100 is usually a very close match [depends of the algorithm])
+~alg  = 4              # one of the 4 fuzzywuzzy routines 
+~len  = 5              # the shortest length of string (in words) to run comparison on
+~id   = [1]            # the number of the column whenre the IDs are
+~comp = [8]          # the numbers of columns strings from which should be compared (divided by commas)
+~disp = [1,3,4,6,8,13] # the numbers of columns strings from which should be printed on the screen (divided by commas)
+~verb = BooksTitlesHist          # this is the infix that will be added to the name of the file with results  
+============================
+"""
 # 1. save only results 

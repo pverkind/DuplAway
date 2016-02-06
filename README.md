@@ -1,6 +1,31 @@
 # DuplAway
 Routine to identify duplicates in fuzzy data (such as, for example, bibliographical records)
 
+* Merging results?
+	* settings in the script on top
+	* filename does not need to include display values, only ID and COMP
+	* save results into files with extension/suffix > load info from files that have this suffix;
+	* suffix includes time stamp; 
+	* during loading timestamped files are
+		* merged into one dicstionary
+		* all are deleted
+		* a new single timestamped file is created
+* m overwrites n
+* removing s, r
+* collect all identified duplicates (through different means)
+	* uri-ed from first step
+	* title/author/passim
+	* + data from Peter
+		* convert into one format: URI > URI > YNM
+			* S > Y
+			* N > M
+			* Y | M > stop: remove both, reprocess
+			* Y | N > stop: remove both, reprocess
+
+# Update:
+ - **duplAway.py** is the main working version; all the descriptions below are applicable to this script
+ - **diplAway_Mod.py** is a working modification that runs in a very similar manner, but calculates ration differently; it compares the results of two fuzzywuzzy algorithms and treats a pair as a match when the results fall within these parameters; essentially, it checks requires that **Alg 4** has a very high value (hardcoded into the function; can be changed directly in the script; 95-100%, seem to work best, 95% may be even a bit low—many false positives); then it checks whether **Alg 1** gives a rather high value as well (50%, also hardcoded in the function). This combination seems to produce very good results with “false positives” appearing only in the case of very closely connected books (such as continuations and abridgements). This stript does not use certain parameters from the config file, namely `alg` and `thr`.
+
 # Running the script:
    - works on Python 3 (will not run on Windows command line if your data is in Unicode; will work via IDLE, but some minor modification to the script are necessary)
    - [fuzzywuzzy library](http://chairnerd.seatgeek.com/fuzzywuzzy-fuzzy-string-matching-in-python/) must be installed
