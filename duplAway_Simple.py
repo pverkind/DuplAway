@@ -16,7 +16,7 @@ ID    = "[1]"            # the number of the column whenre the IDs are
 comp  = "[4,8]"          # columns for comparison (divided by commas)
 disp  = "[1,3,4,6,8,13]" # columns for display (divided by commas)
 verb  = "Books"          # this is the infix that will be added to the name of the file with results
-interSave = 1000         # saving .tmp results every X iterations
+interSave = 100         # saving .tmp results every X iterations
 saveCounter = 25         # saving .results every X manually added results
 #================================================================================
 
@@ -105,7 +105,8 @@ def duplicateDataLoader(resultsFile):
                 val = list(map(int, val))
             else:
                 # other results are to be ignored
-                input(line)
+                #input(line)
+                pass
 
             # updating pairDic
             if key in pairDic:
