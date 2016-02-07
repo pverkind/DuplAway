@@ -199,8 +199,8 @@ def saveCollectedPairs(pairDic, resultsFile, saveMode):
             if type(v) is list:
                 v1 = ",".join(map(str, v))
                 lResults.append(k+"\t"+v1)
-                print(v)
-                input(v1)
+                #print(v)
+                #input(v1)
             else:
                 lResults.append(k+"\t"+v)
         saveListResultsIntoFile(lResults, resultsFile+".tmp")
