@@ -11,7 +11,7 @@ from fuzzywuzzy import process
 #================================================================================
 filename = "AraCorpus_NewBiblio_TriCollection.csv" # this is the file you will analyze
 saveMode = "all"         # variants: all, man[ually tagged]
-alg   = "[50,0,0,50]"    # algorithm threshold above which results are shown
+alg   = "[101,101,101,101]"    # algorithm threshold above which results are shown
 ID    = "[1]"            # the number of the column whenre the IDs are
 comp  = "[4,8]"          # columns for comparison (divided by commas)
 disp  = "[1,3,4,6,8,13]" # columns for display (divided by commas)
