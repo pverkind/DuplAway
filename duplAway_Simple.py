@@ -9,9 +9,9 @@ from fuzzywuzzy import process
 #================================================================================
 # CONFIGURATION =================================================================
 #================================================================================
-filename = "AraCorpus_NewBiblio_TriCollection.csv" # this is the file you will analyze
+filename = "AraCorpus_NewBiblio_Master.tsv" # this is the file you will analyze
 saveMode = "all"         # variants: all, man[ually tagged]
-alg   = "[50,50,50,50]"    # algorithm threshold above which results are shown
+alg   = "[90,20,20,95]"    # algorithm threshold above which results are shown
 ID    = "[1]"            # the number of the column whenre the IDs are
 comp  = "[4,8]"          # columns for comparison (divided by commas)
 disp  = "[1,3,4,6,8,13]" # columns for display (divided by commas)
@@ -293,6 +293,10 @@ def listToList(varList, testList):
         testResult = 'y'
     return(testResult)
 
+#print(listToList([58,59,51,51], list(map(int, alg[1:-1].split(",")))))
+#input(list(map(int, alg[1:-1].split(","))))
+
+
 # REQUIRES: ID column, COMPARE columns, DISPLAY columns
 #def routine2(filename, ID, comp, disp, verb, saveMode):
 def routine2():
@@ -376,7 +380,8 @@ def routine2():
                                 pass
 
                             elif type(pairDic[testKey]) is list:
-                                if listToList(val, algTest) == "y":
+                                #print(pairDic[testKey])
+                                if listToList(pairDic[testKey], algTest) == "y":
                                     os.system('clear') # commands clears the screen
                                     routine2Report(loop1, loop2, testListLen, nump, i, ii)
                                     choice = choiceCollector()
@@ -406,7 +411,8 @@ def routine2():
                             else:
                                 pass
                         else:
-                            val = allRatioResults(i[2], ii[2])                            
+                            val = allRatioResults(i[0], ii[0])
+                            #print(val)
                             if listToList(val, algTest) == "y":
                                 os.system('clear') # commands clears the screen
                                 routine2Report(loop1, loop2, testListLen, nump, i, ii)
