@@ -1,6 +1,6 @@
 ============================
 ~duplAway.py           # do not change
-~file = AraCorpus_NewBiblio_TriCollection.csv  # this is the file you will analyze
+~file = AraCorpus_NewBiblio_Master_withTexts.tsv  # this is the file you will analyze
 ~sav  = all            # variants: all, man[ually tagged]
 ~thr  = 101            # number between 1 and 100 (100 is usually a very close match [depends of the algorithm])
 ~alg  = 1              # one of the 4 fuzzywuzzy routines 
